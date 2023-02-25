@@ -1,0 +1,91 @@
+
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-image: linear-gradient(to right, rgb(47, 47, 47), rgb(150, 150, 150), rgb(218, 162, 58));
+
+}
+
+.calcContainer {
+    background-color: black;
+    width: 370px;
+    height: 750px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 100px;
+    border-radius: 55px;
+}
+
+.calcHeader {
+    font-size: 20px;
+    background-color: transparent;
+    color: white;
+}
+
+.input {
+    color: white;   
+    font-size: 90px;
+    margin-top: 130px;
+    font-family: Helvetica neue;
+    font-weight: 200;
+    margin-right: 10px;
+}
+
+button {
+    border-radius: 100%;
+    width: 75px;
+    height: 75px;
+    font-size: 30px;
+    border-style: none;
+}
+
+#zero {
+    width: 160px;
+    border-radius: 50px;
+}
+
+.buttonContainer {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 15px;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.topRow {
+    background-color: rgb(150, 150, 150);
+}
+
+.topRow:hover {
+    filter: brightness(120%);
+}
+.numbers {
+    background-color:rgb(47, 47, 47);
+    color: white;
+}
+
+.numbers:hover {
+    filter: brightness(150%);
+}
+
+.operators {
+    background-color: rgb(233, 151, 0);
+    color: white;
+    font-size: 40px;
+}
+
+.operators:hover {
+    background-color: rgb(250, 193, 94);
+}
+
+.footer {
+    font-size: 25px;
+    bottom: 15px;
+    position: absolute;
+    left: 15px;
+}
