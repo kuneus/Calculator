@@ -19,6 +19,7 @@ const deleteBtn = document.getElementById('delete');
 const decimal = document.getElementById('decimal');
 const operations = document.getElementsByClassName('operators');
 const equal = document.getElementById('equal');
+const posNeg = document.getElementById('posNeg');
 
 zero.addEventListener('click', function(){
     input.textContent += 0;
@@ -66,6 +67,17 @@ equal.addEventListener('click', function(){
 
 deleteBtn.addEventListener('click', function(){
     input.textContent = '';
+})
+
+posNeg.addEventListener('click', function(){
+    let currentInput = parseInt(input.textContent);
+    if (currentInput > 0) {
+    input.textContent = '-' + currentInput;
+    } else if (currentInput < 0) {
+        input.textContent = currentInput * -1;
+    }
+    //input negative sign in front of positive number,
+    //or remove negative sign from negative number
 })
 
 
