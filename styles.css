@@ -30,10 +30,14 @@ body {
 .input {
     color: white;   
     font-size: 90px;
-    margin-top: 130px;
     font-family: Helvetica neue;
     font-weight: 200;
-    margin-right: 10px;
+    text-align: right;
+    height:250px;
+    width: 330px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
 }
 
 button {
@@ -55,6 +59,7 @@ button {
     padding: 15px;
     justify-content: space-between;
     gap: 10px;
+    align-items: flex-end;
 }
 
 .topRow {
