@@ -89,36 +89,65 @@ let newInput = '';
 let calculation = '';
 
 
+
 addBtn.addEventListener('click', function(){
-    let currentInput = parseFloat(input.textContent);
-    currentArray.push(currentInput);
-    let currentOperation = "add";
-    currentArray.push(currentOperation);
-    input.textContent = '';
+    if (input.textContent != '') {
+        let currentInput = parseFloat(input.textContent);
+        currentArray.push(currentInput);
+        let currentOperation = "add";
+        currentArray.push(currentOperation);
+        input.textContent = '';
+    } else {
+        currentArray.pop();
+        let currentOperation = "add";
+        currentArray.push(currentOperation);
+        input.textContent = '';
+    }
 });
 
 subtractBtn.addEventListener('click', function(){
-    let currentInput = parseFloat(input.textContent);
-    currentArray.push(currentInput);
-    let currentOperation = "subtract";
-    currentArray.push(currentOperation);
-    input.textContent = '';
+    if (input.textContent != '') {
+        let currentInput = parseFloat(input.textContent);
+        currentArray.push(currentInput);
+        let currentOperation = "subtract";
+        currentArray.push(currentOperation);
+        input.textContent = '';
+    } else {
+        currentArray.pop();
+        let currentOperation = "subtract";
+        currentArray.push(currentOperation);
+        input.textContent = '';
+    }
 });
 
 multiplyBtn.addEventListener('click', function(){
-    let currentInput = parseFloat(input.textContent);
-    currentArray.push(currentInput);
-    let currentOperation = "multiply";
-    currentArray.push(currentOperation);
-    input.textContent = '';
+    if (input.textContent != '') {
+        let currentInput = parseFloat(input.textContent);
+        currentArray.push(currentInput);
+        let currentOperation = "multiply";
+        currentArray.push(currentOperation);
+        input.textContent = '';
+    } else {
+        currentArray.pop();
+        let currentOperation = "multiply";
+        currentArray.push(currentOperation);
+        input.textContent = '';
+    }
 });
 
 divideBtn.addEventListener('click', function(){
-    let currentInput = parseFloat(input.textContent);
-    currentArray.push(currentInput);
-    let currentOperation = "divide";
-    currentArray.push(currentOperation);
-    input.textContent = '';
+    if (input.textContent != '') {
+        let currentInput = parseFloat(input.textContent);
+        currentArray.push(currentInput);
+        let currentOperation = "divide";
+        currentArray.push(currentOperation);
+        input.textContent = '';
+    } else {
+        currentArray.pop();
+        let currentOperation = "divide";
+        currentArray.push(currentOperation);
+        input.textContent = '';
+    }
 });
 
 
@@ -200,9 +229,9 @@ function operate() {
 //  use array methods such as map or reduce
 //  
 //sequence is as follows:
-//  1. click numbers into input
-//  2. click an operator
-//  3. store current input and store the operator
+//  1. click numbers into input - DONE
+//  2. click an operator - DONE
+//  3. store current input and store the operator - DONE
 //  4. clear current input and add new input with the next button press
 //  5. repeat steps 2-4 for operations that involve >2 sets of numbers
 //  6. store all inputs and operations into an array
@@ -212,11 +241,11 @@ function operate() {
 //      7b. must define conditionals within a function for the order of operations
 //  8. final value is returned in the input.
 //  9. Allow new operations to operate on final value for continuity
-// 10. allClear removes current input and resets array storage
-// 11. clear function clears current input but does not reset array storage
+// 10. allClear removes current input and resets array storage - DONE
+// 11. clear function clears current input but does not reset array storage - DONE
 
 //Misc:
-//  1. Add rule that decimal point can only be used once
+//  1. Add rule that decimal point can only be used once - DONE
 //  2. Add rule that numbers cannot exceed 6 figures, OR
 //      decrease font size with additional figures beyond 6, with max input of 9 figures
-//  3. +/- button turns current input into a positive or negative
+//  3. +/- button turns current input into a positive or negative - DONE
