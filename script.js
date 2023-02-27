@@ -167,8 +167,7 @@ const divide = function(a,b){
     return a / b;
 }
 
-    // takes an operator and 2 numbers and then calls one of 
-    // the above functions on the numbers.
+  
 //operate function for calculating multiple operations
 // function operate() {
 //     let newInput = parseFloat(input.textContent);
@@ -199,8 +198,9 @@ function operate() {
         let calculation = divide(currentArray[0],currentArray[2]);
         input.textContent = calculation;
     } else {
-        alert("testing 1 2 3!")
+        alert("haven't fixed that bug yet :-/")
     };
+    currentArray =  [];
 }
 
 
