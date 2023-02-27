@@ -1,4 +1,3 @@
-console.log("hello world");
 const input = document.getElementById('input');
 const zero = document.getElementById('zero');
 const one = document.getElementById('one');
@@ -58,7 +57,9 @@ allClearbtn.addEventListener('click', function (){
 });
 
 decimal.addEventListener('click', function(){
-    input.textContent += '.';
+    if (!input.textContent.includes('.')) {
+    input.textContent += '.'
+    };
 });
 
 equal.addEventListener('click', function(){
@@ -70,16 +71,15 @@ deleteBtn.addEventListener('click', function(){
 })
 
 posNeg.addEventListener('click', function(){
-    let currentInput = parseInt(input.textContent);
+    let currentInput = parseFloat(input.textContent);
     if (currentInput > 0) {
     input.textContent = '-' + currentInput;
     } else if (currentInput < 0) {
         input.textContent = currentInput * -1;
+    } else {
+        input.textContent = '-';
     }
-    //input negative sign in front of positive number,
-    //or remove negative sign from negative number
 })
-
 
 
 let currentArray = [];
@@ -90,7 +90,7 @@ let calculation = '';
 
 
 addBtn.addEventListener('click', function(){
-    let currentInput = parseInt(input.textContent);
+    let currentInput = parseFloat(input.textContent);
     currentArray.push(currentInput);
     let currentOperation = "add";
     currentArray.push(currentOperation);
@@ -98,7 +98,7 @@ addBtn.addEventListener('click', function(){
 });
 
 subtractBtn.addEventListener('click', function(){
-    let currentInput = parseInt(input.textContent);
+    let currentInput = parseFloat(input.textContent);
     currentArray.push(currentInput);
     let currentOperation = "subtract";
     currentArray.push(currentOperation);
@@ -106,7 +106,7 @@ subtractBtn.addEventListener('click', function(){
 });
 
 multiplyBtn.addEventListener('click', function(){
-    let currentInput = parseInt(input.textContent);
+    let currentInput = parseFloat(input.textContent);
     currentArray.push(currentInput);
     let currentOperation = "multiply";
     currentArray.push(currentOperation);
@@ -114,7 +114,7 @@ multiplyBtn.addEventListener('click', function(){
 });
 
 divideBtn.addEventListener('click', function(){
-    let currentInput = parseInt(input.textContent);
+    let currentInput = parseFloat(input.textContent);
     currentArray.push(currentInput);
     let currentOperation = "divide";
     currentArray.push(currentOperation);
@@ -140,8 +140,22 @@ const divide = function(a,b){
 
     // takes an operator and 2 numbers and then calls one of 
     // the above functions on the numbers.
+//operate function for calculating multiple operations
+// function operate() {
+//     let newInput = parseFloat(input.textContent);
+//     currentArray.push(newInput);
+//     let calculate = currentArray.reduce(function(previousValue, currentValue) {
+//         if (currentValue === "multiply") {
+//             return previousValue;
+//         } return previousValue * currentValue;
+//     });
+
+//     input.textContent = calculate;
+// }
+
+//operate function which can only calculate a single operation
 function operate() {
-    let newInput = parseInt(input.textContent);
+    let newInput = parseFloat(input.textContent);
     currentArray.push(newInput);
     if (currentArray[1] === "add") {
         let calculation = add(currentArray[0],currentArray[2]);
@@ -159,7 +173,6 @@ function operate() {
         alert("testing 1 2 3!")
     };
 }
-
 
 
 
