@@ -19,37 +19,68 @@ const decimal = document.getElementById('decimal');
 const operations = document.getElementsByClassName('operators');
 const equal = document.getElementById('equal');
 const posNeg = document.getElementById('posNeg');
+const allBtns = document.getElementsByClassName('numbers');
 
-zero.addEventListener('click', function(){
-    input.textContent += 0;
-});
-one.addEventListener('click', function(){
-    input.textContent += 1;
-});
-two.addEventListener('click', function(){
-    input.textContent += 2;
-});
-three.addEventListener('click', function(){
-    input.textContent += 3;
-});
-four.addEventListener('click', function(){
-    input.textContent += 4;
-});
-five.addEventListener('click', function(){
-    input.textContent += 5;
-});
-six.addEventListener('click', function(){
-    input.textContent += 6;
-});
-seven.addEventListener('click', function(){
-    input.textContent += 7;
-});
-eight.addEventListener('click', function(){
-    input.textContent += 8;
-});
-nine.addEventListener('click', function(){
-    input.textContent += 9;
-});
+// const updateDisplay = (click) => {
+//     let valOutput = click.target.innerText;
+//     input.textContent += valOutput;
+//     if (input.textContent.length > 6) {
+//         input.textContent = input.textContent.slice(0,-1);
+//     } 
+// };
+
+
+const updateDisplay = (click) => {
+    let valOutput = click.target.innerText;
+    input.textContent += valOutput;
+    if (input.textContent.length > 6 && input.textContent.length < 8) {
+        input.style.fontSize = "80px";
+    } else if (input.textContent.length > 7 && input.textContent.length < 9) {
+        input.style.fontSize = "70px";
+    } else if (input.textContent.length > 8 && input.textContent.length < 10) {
+        input.style.fontSize = "60px";
+    } else if (input.textContent.length > 9) {
+        input.textContent = input.textContent.slice(0,-1);
+    } else {
+        input.style.fontSize = "90px";
+    }
+};
+
+for (let i = 0; i < allBtns.length; i++) {
+    allBtns[i].addEventListener('click', updateDisplay)
+};
+
+
+// zero.addEventListener('click', function(){
+//     input.textContent += 0;
+// });
+// one.addEventListener('click', function(){
+//     input.textContent += 1;
+// });
+// two.addEventListener('click', function(){
+//     input.textContent += 2;
+// });
+// three.addEventListener('click', function(){
+//     input.textContent += 3;
+// });
+// four.addEventListener('click', function(){
+//     input.textContent += 4;
+// });
+// five.addEventListener('click', function(){
+//     input.textContent += 5;
+// });
+// six.addEventListener('click', function(){
+//     input.textContent += 6;
+// });
+// seven.addEventListener('click', function(){
+//     input.textContent += 7;
+// });
+// eight.addEventListener('click', function(){
+//     input.textContent += 8;
+// });
+// nine.addEventListener('click', function(){
+//     input.textContent += 9;
+// });
 
 allClearbtn.addEventListener('click', function (){
     input.textContent = '';
@@ -204,7 +235,6 @@ function operate() {
 }
 
 
-
 // pseudocode
 // create button functionality
 //     number click is displayed on input screen
@@ -232,7 +262,7 @@ function operate() {
 //  1. click numbers into input - DONE
 //  2. click an operator - DONE
 //  3. store current input and store the operator - DONE
-//  4. clear current input and add new input with the next button press
+//  4. clear current input and add new input with the next button press - DONE
 //  5. repeat steps 2-4 for operations that involve >2 sets of numbers
 //  6. store all inputs and operations into an array
 //  7. when equal is clicked, all inputs in the array and their operations are 
@@ -240,7 +270,7 @@ function operate() {
 //      7a. calculations must follow order of operations
 //      7b. must define conditionals within a function for the order of operations
 //  8. final value is returned in the input.
-//  9. Allow new operations to operate on final value for continuity
+//  9. Allow new operations to operate on final value for continuity - DONE
 // 10. allClear removes current input and resets array storage - DONE
 // 11. clear function clears current input but does not reset array storage - DONE
 
