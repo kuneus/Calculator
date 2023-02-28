@@ -21,15 +21,8 @@ const equal = document.getElementById('equal');
 const posNeg = document.getElementById('posNeg');
 const allBtns = document.getElementsByClassName('numbers');
 
-// const updateDisplay = (click) => {
-//     let valOutput = click.target.innerText;
-//     input.textContent += valOutput;
-//     if (input.textContent.length > 6) {
-//         input.textContent = input.textContent.slice(0,-1);
-//     } 
-// };
 
-
+//function to update input with button click and limit length of numb
 const updateDisplay = (click) => {
     let valOutput = click.target.innerText;
     input.textContent += valOutput;
@@ -46,61 +39,32 @@ const updateDisplay = (click) => {
     }
 };
 
+//loop for all number display inputs
 for (let i = 0; i < allBtns.length; i++) {
     allBtns[i].addEventListener('click', updateDisplay)
 };
 
 
-// zero.addEventListener('click', function(){
-//     input.textContent += 0;
-// });
-// one.addEventListener('click', function(){
-//     input.textContent += 1;
-// });
-// two.addEventListener('click', function(){
-//     input.textContent += 2;
-// });
-// three.addEventListener('click', function(){
-//     input.textContent += 3;
-// });
-// four.addEventListener('click', function(){
-//     input.textContent += 4;
-// });
-// five.addEventListener('click', function(){
-//     input.textContent += 5;
-// });
-// six.addEventListener('click', function(){
-//     input.textContent += 6;
-// });
-// seven.addEventListener('click', function(){
-//     input.textContent += 7;
-// });
-// eight.addEventListener('click', function(){
-//     input.textContent += 8;
-// });
-// nine.addEventListener('click', function(){
-//     input.textContent += 9;
-// });
-
+//event listeners for misc buttons
 allClearbtn.addEventListener('click', function (){
     input.textContent = '';
     currentArray.length = 0;
-});
-
+    }
+);
 decimal.addEventListener('click', function(){
     if (!input.textContent.includes('.')) {
     input.textContent += '.'
     };
-});
-
+    }
+);
 equal.addEventListener('click', function(){
     operate();
-});
-
+    }
+);
 deleteBtn.addEventListener('click', function(){
     input.textContent = '';
-})
-
+    }
+);
 posNeg.addEventListener('click', function(){
     let currentInput = parseFloat(input.textContent);
     if (currentInput > 0) {
@@ -110,7 +74,7 @@ posNeg.addEventListener('click', function(){
     } else {
         input.textContent = '-';
     }
-})
+});
 
 
 let currentArray = [];
@@ -120,7 +84,7 @@ let newInput = '';
 let calculation = '';
 
 
-
+//event listeners for operators
 addBtn.addEventListener('click', function(){
     if (input.textContent != '') {
         let currentInput = parseFloat(input.textContent);
@@ -135,7 +99,6 @@ addBtn.addEventListener('click', function(){
         input.textContent = '';
     }
 });
-
 subtractBtn.addEventListener('click', function(){
     if (input.textContent != '') {
         let currentInput = parseFloat(input.textContent);
@@ -150,7 +113,6 @@ subtractBtn.addEventListener('click', function(){
         input.textContent = '';
     }
 });
-
 multiplyBtn.addEventListener('click', function(){
     if (input.textContent != '') {
         let currentInput = parseFloat(input.textContent);
@@ -165,7 +127,6 @@ multiplyBtn.addEventListener('click', function(){
         input.textContent = '';
     }
 });
-
 divideBtn.addEventListener('click', function(){
     if (input.textContent != '') {
         let currentInput = parseFloat(input.textContent);
@@ -232,8 +193,39 @@ function operate() {
         alert("haven't fixed that bug yet :-/")
     };
     currentArray =  [];
+
+    //
+    let finalInput = parseFloat(input.textContent);
+
+    if (input.textContent.length > 6 && input.textContent.length < 8) {
+        input.style.fontSize = "80px";
+    } else if (input.textContent.length > 7 && input.textContent.length < 9) {
+        input.style.fontSize = "70px";
+    } else if (input.textContent.length > 8 && input.textContent.length < 10) {
+        input.style.fontSize = "60px";
+    } else if (input.textContent.length > 9) {
+        input.textContent = finalInput.toExponential(4);
+        input.style.fontSize = "60px";
+    } else {
+        input.style.fontSize = "90px";
+    }
+
+    //if calculation exceeds absurdly large or small numbers (1x10^100)
+    
+    let maxNumber = parseFloat(1e+100);
+    let minNumber = parseFloat(1e-100);
+    if (finalInput > maxNumber || finalInput < minNumber){
+        input.textContent = 'SRSLY?';
+    } 
+
 }
 
+
+//Math.round((num + Number.EPSILON ) * 100 ) / 100
+//num = parseFloat(input.textContent);
+//can either round decimal to 2 places to give scientific notation, but if latter,
+    //need to figure out how to give SciNo while limiting the decimal value within it
+    
 
 // pseudocode
 // create button functionality
@@ -277,5 +269,6 @@ function operate() {
 //Misc:
 //  1. Add rule that decimal point can only be used once - DONE
 //  2. Add rule that numbers cannot exceed 6 figures, OR
-//      decrease font size with additional figures beyond 6, with max input of 9 figures
+//      decrease font size with additional figures beyond 6, with max input of 9 figures - DONE
 //  3. +/- button turns current input into a positive or negative - DONE
+//  4. Limit number of characters in calculations
