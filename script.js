@@ -194,9 +194,8 @@ function operate() {
     };
     currentArray =  [];
 
-    //
+    //if calculation exceeds >6 digits
     let finalInput = parseFloat(input.textContent);
-
     if (input.textContent.length > 6 && input.textContent.length < 8) {
         input.style.fontSize = "80px";
     } else if (input.textContent.length > 7 && input.textContent.length < 9) {
@@ -210,14 +209,14 @@ function operate() {
         input.style.fontSize = "90px";
     }
 
-    //if calculation exceeds absurdly large or small numbers (1x10^100)
-    
+    //if calculation exceeds absurdly large or small numbers (1x10^100
     let maxNumber = parseFloat(1e+100);
-    let minNumber = parseFloat(1e-100);
-    if (finalInput > maxNumber || finalInput < minNumber){
+    let minNeg = parseFloat(-1e+100);
+    let minDec = parseFloat(1e-100);
+    let minNegDec = parseFloat(-1e-100);
+    if (finalInput > maxNumber || finalInput < minNeg || finalInput < minDec && finalInput > 0 || finalInput > minNegDec && finalInput > -1){
         input.textContent = 'SRSLY?';
-    } 
-
+    }; 
 }
 
 
@@ -271,4 +270,4 @@ function operate() {
 //  2. Add rule that numbers cannot exceed 6 figures, OR
 //      decrease font size with additional figures beyond 6, with max input of 9 figures - DONE
 //  3. +/- button turns current input into a positive or negative - DONE
-//  4. Limit number of characters in calculations
+//  4. Limit number of characters in calculations - DONE
