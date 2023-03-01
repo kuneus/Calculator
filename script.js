@@ -66,7 +66,7 @@ deleteBtn.addEventListener('click', function(){
     }
 );
 posNeg.addEventListener('click', function(){
-    let currentInput = parseFloat(input.textContent);
+    let currentInput = input.textContent;
     if (currentInput > 0) {
     input.textContent = '-' + currentInput;
     } else if (currentInput < 0) {
@@ -172,6 +172,7 @@ const divide = function(a,b){
 
 //     input.textContent = calculate;
 // }
+//maybe turn array into one string, and then calculate on single string?
 
 //operate function which can only calculate a single operation
 function operate() {
@@ -209,22 +210,18 @@ function operate() {
         input.style.fontSize = "90px";
     }
 
-    //if calculation exceeds absurdly large or small numbers (1x10^100
-    let maxNumber = parseFloat(1e+100);
-    let minNeg = parseFloat(-1e+100);
-    let minDec = parseFloat(1e-100);
-    let minNegDec = parseFloat(-1e-100);
-    if (finalInput > maxNumber || finalInput < minNeg || finalInput < minDec && finalInput > 0 || finalInput > minNegDec && finalInput > -1){
+    //if calculation exceeds absurdly long lengths (>100)
+    let maxNumber = parseFloat(1e+100); //max positive number
+    let minNeg = parseFloat(-1e+100); //max negative number
+    let minDec = parseFloat(1e-100); //max length between 0 and 1
+    let minNegDec = parseFloat(-1e-100); //max length between 0 and -1
+    if (finalInput > maxNumber 
+        || finalInput < minNeg 
+        || finalInput < minDec && finalInput > 0 
+        || finalInput > minNegDec && finalInput < 0){
         input.textContent = 'SRSLY?';
     }; 
 }
-
-
-//Math.round((num + Number.EPSILON ) * 100 ) / 100
-//num = parseFloat(input.textContent);
-//can either round decimal to 2 places to give scientific notation, but if latter,
-    //need to figure out how to give SciNo while limiting the decimal value within it
-    
 
 // pseudocode
 // create button functionality
