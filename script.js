@@ -58,7 +58,10 @@ decimal.addEventListener('click', function(){
     }
 );
 equal.addEventListener('click', function(){
-    operate();
+    let currentInput = parseFloat(input.textContent);
+    currentArray.push(currentInput)
+    multiOperate(currentArray);
+    currentArray = [];
     }
 );
 deleteBtn.addEventListener('click', function(){
@@ -89,12 +92,12 @@ addBtn.addEventListener('click', function(){
     if (input.textContent != '') {
         let currentInput = parseFloat(input.textContent);
         currentArray.push(currentInput);
-        let currentOperation = "add";
+        let currentOperation = "+";
         currentArray.push(currentOperation);
         input.textContent = '';
     } else {
         currentArray.pop();
-        let currentOperation = "add";
+        let currentOperation = "+";
         currentArray.push(currentOperation);
         input.textContent = '';
     }
@@ -103,12 +106,12 @@ subtractBtn.addEventListener('click', function(){
     if (input.textContent != '') {
         let currentInput = parseFloat(input.textContent);
         currentArray.push(currentInput);
-        let currentOperation = "subtract";
+        let currentOperation = "-";
         currentArray.push(currentOperation);
         input.textContent = '';
     } else {
         currentArray.pop();
-        let currentOperation = "subtract";
+        let currentOperation = "-";
         currentArray.push(currentOperation);
         input.textContent = '';
     }
@@ -117,12 +120,12 @@ multiplyBtn.addEventListener('click', function(){
     if (input.textContent != '') {
         let currentInput = parseFloat(input.textContent);
         currentArray.push(currentInput);
-        let currentOperation = "multiply";
+        let currentOperation = "*";
         currentArray.push(currentOperation);
         input.textContent = '';
     } else {
         currentArray.pop();
-        let currentOperation = "multiply";
+        let currentOperation = "*";
         currentArray.push(currentOperation);
         input.textContent = '';
     }
@@ -131,97 +134,104 @@ divideBtn.addEventListener('click', function(){
     if (input.textContent != '') {
         let currentInput = parseFloat(input.textContent);
         currentArray.push(currentInput);
-        let currentOperation = "divide";
+        let currentOperation = "/";
         currentArray.push(currentOperation);
         input.textContent = '';
     } else {
         currentArray.pop();
-        let currentOperation = "divide";
+        let currentOperation = "/";
         currentArray.push(currentOperation);
         input.textContent = '';
     }
 });
 
 
-const add = function(a,b){
-    return a + b;
+function calculate(a, operator, b) {
+    switch (operator) {
+        case '+':
+            return a + b;
+        case '-':
+            return a - b;
+        case '*':
+            return a * b;
+        case '/':
+            return a / b;
+    }
 }
 
-const subtract = function(a,b){
-    return a - b;
-}
-
-const multiply = function(a,b){
-    return a * b;
-}
-
-const divide = function(a,b){
-    return a / b;
-}
-
-  
 //operate function for calculating multiple operations
-// function operate() {
-//     let newInput = parseFloat(input.textContent);
-//     currentArray.push(newInput);
-//     let calculate = currentArray.reduce(function(previousValue, currentValue) {
-//         if (currentValue === "multiply") {
-//             return previousValue;
-//         } return previousValue * currentValue;
-//     });
+function multiOperate(array) {
+    let result = array[0];
+    let currentOperator = null;
+    let currentOperand = null;
+  
+    for (let i = 1; i < array.length; i++) {
+        const item = array[i];
 
-//     input.textContent = calculate;
-// }
+        if (typeof item === 'number') {
+            if (currentOperator === null) { //if no operator established, sets the first item as result
+                result = item; //result acts as the first operand
+            } else if (currentOperator === '*' || currentOperator === '/') { //if operator established, sets current item as current operand
+                currentOperand = item;
+                result = calculate(result, currentOperator, currentOperand); //calculate result and current item with current operator
+            }
+        } else if (typeof item === 'string') { //if current item is a string, establish current item as current operator
+            currentOperator = item;
+        }
+    }
+    input.textContent = result;
+}
+
 //maybe turn array into one string, and then calculate on single string?
 
 //operate function which can only calculate a single operation
-function operate() {
-    let newInput = parseFloat(input.textContent);
-    currentArray.push(newInput);
-    if (currentArray[1] === "add") {
-        let calculation = add(currentArray[0],currentArray[2]);
-        input.textContent = calculation;
-    } else if (currentArray[1] === "subtract") {
-        let calculation = subtract(currentArray[0],currentArray[2]);
-        input.textContent = calculation;
-    } else if (currentArray[1] === "multiply") {
-        let calculation = multiply(currentArray[0],currentArray[2]);
-        input.textContent = calculation;
-    } else if (currentArray[1] === "divide") {
-        let calculation = divide(currentArray[0],currentArray[2]);
-        input.textContent = calculation;
-    } else {
-        alert("haven't fixed that bug yet :-/")
-    };
-    currentArray =  [];
+// function operate() {
+//     let newInput = parseFloat(input.textContent);
+//     currentArray.push(newInput);
+//     if (currentArray[1] === "+") {
+//         let calculation = add(currentArray[0],currentArray[2]);
+//         input.textContent = calculation;
+//     } else if (currentArray[1] === "-") {
+//         let calculation = subtract(currentArray[0],currentArray[2]);
+//         input.textContent = calculation;
+//     } else if (currentArray[1] === "*") {
+//         let calculation = multiply(currentArray[0],currentArray[2]);
+//         input.textContent = calculation;
+//     } else if (currentArray[1] === "/") {
+//         let calculation = divide(currentArray[0],currentArray[2]);
+//         input.textContent = calculation;
+//     } else {
+//         alert("haven't fixed that bug yet :-/")
+//     };
+//     currentArray =  [];
 
-    //if calculation exceeds >6 digits
-    let finalInput = parseFloat(input.textContent);
-    if (input.textContent.length > 6 && input.textContent.length < 8) {
-        input.style.fontSize = "80px";
-    } else if (input.textContent.length > 7 && input.textContent.length < 9) {
-        input.style.fontSize = "70px";
-    } else if (input.textContent.length > 8 && input.textContent.length < 10) {
-        input.style.fontSize = "60px";
-    } else if (input.textContent.length > 9) {
-        input.textContent = finalInput.toExponential(4);
-        input.style.fontSize = "60px";
-    } else {
-        input.style.fontSize = "90px";
-    }
+//     //if calculation exceeds >6 digits
+//     let finalInput = parseFloat(input.textContent);
+//     if (input.textContent.length > 6 && input.textContent.length < 8) {
+//         input.style.fontSize = "80px";
+//     } else if (input.textContent.length > 7 && input.textContent.length < 9) {
+//         input.style.fontSize = "70px";
+//     } else if (input.textContent.length > 8 && input.textContent.length < 10) {
+//         input.style.fontSize = "60px";
+//     } else if (input.textContent.length > 9) {
+//         input.textContent = finalInput.toExponential(4);
+//         input.style.fontSize = "60px";
+//     } else {
+//         input.style.fontSize = "90px";
+//     }
 
-    //if calculation exceeds absurdly long lengths (>100)
-    let maxNumber = parseFloat(1e+100); //max positive number
-    let minNeg = parseFloat(-1e+100); //max negative number
-    let minDec = parseFloat(1e-100); //max length between 0 and 1
-    let minNegDec = parseFloat(-1e-100); //max length between 0 and -1
-    if (finalInput > maxNumber 
-        || finalInput < minNeg 
-        || finalInput < minDec && finalInput > 0 
-        || finalInput > minNegDec && finalInput < 0){
-        input.textContent = 'SRSLY?';
-    }; 
-}
+//     //if calculation exceeds absurdly long lengths (>100)
+//     let maxNumber = parseFloat(1e+100); //max positive number
+//     let minNeg = parseFloat(-1e+100); //max negative number
+//     let minDec = parseFloat(1e-100); //max length between 0 and 1
+//     let minNegDec = parseFloat(-1e-100); //max length between 0 and -1
+//     if (finalInput > maxNumber 
+//         || finalInput < minNeg 
+//         || finalInput < minDec && finalInput > 0 
+//         || finalInput > minNegDec && finalInput < 0){
+//         input.textContent = 'SRSLY?';
+//     }; 
+// }
 
 // pseudocode
 // create button functionality
