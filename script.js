@@ -62,6 +62,7 @@ equal.addEventListener('click', function(){
     currentArray.push(currentInput)
     multiOperate(currentArray);
     currentArray = [];
+
     }
 );
 deleteBtn.addEventListener('click', function(){
@@ -81,6 +82,7 @@ posNeg.addEventListener('click', function(){
 
 
 let currentArray = [];
+let secondaryArray = [];
 let currentInput = '';
 let currentOperation = '';
 let newInput = '';
@@ -164,23 +166,101 @@ function multiOperate(array) {
     let result = array[0];
     let currentOperator = null;
     let currentOperand = null;
+    let secondaryOperator = null;
+    let previousOperand = null;
+    let secondaryArray = [];
+    if (array[1] === '-' || array[1] === '+'){
+        if (array[3] === '*' || array[3] === '/') {
+        secondaryArray.push(array[0]);
+        } 
+    }
   
     for (let i = 1; i < array.length; i++) {
         const item = array[i];
+        const nextItem = array[i+1];
 
         if (typeof item === 'number') {
             if (currentOperator === null) { //if no operator established, sets the first item as result
                 result = item; //result acts as the first operand
-            } else if (currentOperator === '*' || currentOperator === '/') { //if operator established, sets current item as current operand
+            } else if (currentOperator === '*' || currentOperator === '/') { //if operator is multiply or divide, continue with calculate
                 currentOperand = item;
-                result = calculate(result, currentOperator, currentOperand); //calculate result and current item with current operator
+                if (previousOperand === null) { //if previous operand isn't stored
+                    result = calculate(result, currentOperator, currentOperand); 
+                } else { //if previous operand is stored, then start new accumulator with previous operand
+                    previousOperand = calculate(previousOperand, currentOperator, currentOperand); 
+                    if (array[i+1] === '+' || array[i+1] === '-') {
+                        secondaryArray.push(previousOperand); //push new accumulation to secondary array
+                        previousOperand = 0; //reset accumulation to let it accumulate again
+                    }
+                }
+            } else if (secondaryOperator === '+' || secondaryOperator === '-') {
+                if (nextItem === '*' || nextItem === '/') { //if current operator is add/subtract but following operator is mult/div
+                    previousOperand = item;
+                    secondaryArray.push(secondaryOperator); //store lower precedence operators in second array
+                } else { //if current operator is add/subject and is not competing with mult/div for following operator
+                    currentOperand = item;
+                    result = calculate(result, secondaryOperator, currentOperand);
+                }
             }
         } else if (typeof item === 'string') { //if current item is a string, establish current item as current operator
-            currentOperator = item;
+            if (item === '*' || item === '/'){
+                currentOperator = item;
+            } else {
+                currentOperator = "hold";
+                secondaryOperator = item;
+            }
         }
     }
-    input.textContent = result;
+
+    if (previousOperand === null) { //if simple calculation with no competing operators
+        input.textContent = result;
+        //secondaryArray.push(result);
+    } else { //if calculation involves competing operators
+        secondaryArray.push(previousOperand); //append mult/div accumulator from above loop
+        console.log(secondaryArray);
+
+        let result = secondaryArray[0];
+        let currentOperator = null;
+        let currentOperand = null;
+        
+        for (let i = 1; i < secondaryArray.length; i++) {
+            const item = secondaryArray[i];
+
+            if (typeof item === 'number') {
+                if (currentOperator === null) {
+                    result = item;
+                } else {
+                    currentOperand = item;
+                    result = calculate(result, currentOperator, currentOperand);
+                }
+            } else if (typeof item === 'string') {
+                currentOperator = item;
+            }
+        }
+        input.textContent = result;
+        
+        /*
+        for (let i = 1; i < secondaryArray.length; i++) {
+            const item = secondaryArray[i];
+            result = secondaryArray[0];
+            currentOperator = null;
+            currentOperand = null;
+
+            if (typeof item === 'number') {
+                if (currentOperator === null) {
+                    result = item;
+                } else {
+                    currentOperand = item;
+                    result = calculate(result, currentOperator, currentOperand);
+                }
+            } else if (typeof item === 'string') {
+                currentOperator = item;
+            }
+        }
+        input.textContent = result; */
+    }
 }
+
 
 //maybe turn array into one string, and then calculate on single string?
 
@@ -233,48 +313,55 @@ function multiOperate(array) {
 //     }; 
 // }
 
-// pseudocode
-// create button functionality
-//     number click is displayed on input screen
-// create math functions
-//     add executes add function
-//     subtract executes subtract function
-//     multiply executes multiply function
-//     divide executes divide function
-//     equal executes equal function
-// create other functions
-//     allClear executes allClear function
-//     delete executes delete function
-//each operator function must store first set of numbers,
-//  clear the input, and store the operation
-//operate function must apply the operator functions to
-//  the stored numbers 
-//  any time a button is clicked, it should highlight the button until a new 
-//      button is clicked.
-//  once a new button is clicked, it should clear the current input and 
-//      allow a new number to be input
-//to store numbers, may need to store them in arrays and 
-//  use array methods such as map or reduce
-//  
-//sequence is as follows:
-//  1. click numbers into input - DONE
-//  2. click an operator - DONE
-//  3. store current input and store the operator - DONE
-//  4. clear current input and add new input with the next button press - DONE
-//  5. repeat steps 2-4 for operations that involve >2 sets of numbers
-//  6. store all inputs and operations into an array
-//  7. when equal is clicked, all inputs in the array and their operations are 
-//      calculated into a final value
-//      7a. calculations must follow order of operations
-//      7b. must define conditionals within a function for the order of operations
-//  8. final value is returned in the input.
-//  9. Allow new operations to operate on final value for continuity - DONE
-// 10. allClear removes current input and resets array storage - DONE
-// 11. clear function clears current input but does not reset array storage - DONE
+/*
+pseudocode
+create button functionality
+    number click is displayed on input screen
+create math functions
+    add executes add function
+    subtract executes subtract function
+    multiply executes multiply function
+    divide executes divide function
+    equal executes equal function
+create other functions
+    allClear executes allClear function
+    delete executes delete function
+each operator function must store first set of numbers,
+ clear the input, and store the operation
+operate function must apply the operator functions to
+ the stored numbers 
+ any time a button is clicked, it should highlight the button until a new 
+     button is clicked.
+ once a new button is clicked, it should clear the current input and 
+     allow a new number to be input
+to store numbers, may need to store them in arrays and 
+ use array methods such as map or reduce
+ 
+sequence is as follows:
+ 1. click numbers into input - DONE
+ 2. click an operator - DONE
+ 3. store current input and store the operator - DONE
+ 4. clear current input and add new input with the next button press - DONE
+ 5. repeat steps 2-4 for operations that involve >2 sets of numbers - DONE
+ 6. store all inputs and operations into an array - DONE
+ 7. when equal is clicked, all inputs in the array and their operations are 
+     calculated into a final value - DONE
+     7a. calculations must follow order of operations - DONE
+     7b. must define conditionals within a function for the order of operations - DONE
+ 8. final value is returned in the input.  - DONE
+ 9. Allow new operations to operate on final value for continuity - DONE
+10. allClear removes current input and resets array storage - DONE
+11. clear function clears current input but does not reset array storage - DONE
 
-//Misc:
-//  1. Add rule that decimal point can only be used once - DONE
-//  2. Add rule that numbers cannot exceed 6 figures, OR
-//      decrease font size with additional figures beyond 6, with max input of 9 figures - DONE
-//  3. +/- button turns current input into a positive or negative - DONE
-//  4. Limit number of characters in calculations - DONE
+Misc:
+ 1. Add rule that decimal point can only be used once - DONE
+ 2. Add rule that numbers cannot exceed 6 figures, OR
+     decrease font size with additional figures beyond 6, with max input of 9 figures - DONE
+ 3. +/- button turns current input into a positive or negative - DONE
+ 4. Limit number of characters in calculations - DONE
+
+ CURRENT BUGS/TO-DO:
+ - multiple decimal input
+ - add character length limit to new multiOperate function
+ - divide by zero error
+*/
