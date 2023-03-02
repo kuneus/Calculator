@@ -44,31 +44,79 @@ for (let i = 0; i < allBtns.length; i++) {
     allBtns[i].addEventListener('click', updateDisplay)
 };
 
+//loop to update input with number key clicked on keyboard and limit length of numb. **turns input into string**
+for (let i = 0; i <= 9; i++) {
+    document.addEventListener('keydown', function(event) {
+      if (event.key === i.toString()) {
+        input.textContent += i;
+      }
+      if (input.textContent.length > 6 && input.textContent.length < 8) {
+        input.style.fontSize = "80px";
+    } else if (input.textContent.length > 7 && input.textContent.length < 9) {
+        input.style.fontSize = "70px";
+    } else if (input.textContent.length > 8 && input.textContent.length < 10) {
+        input.style.fontSize = "60px";
+    } else if (input.textContent.length > 9) {
+        input.textContent = input.textContent.slice(0,-1);
+    } else {
+        input.style.fontSize = "90px";
+    }
+    });
+  }
 
-//event listeners for misc buttons
+//event listeners for misc buttons and keyboard presses
 allClearbtn.addEventListener('click', function (){
     input.textContent = '';
     currentArray.length = 0;
     }
 );
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        input.textContent = '';
+        currentArray.length = 0;
+    }
+});
+
 decimal.addEventListener('click', function(){
     if (!input.textContent.includes('.')) {
     input.textContent += '.'
     };
     }
 );
+document.addEventListener('keydown', function(event) {
+    if (!input.textContent.includes('.')) {
+        if (event.key === '.') {
+            input.textContent += '.';
+        }
+    }
+});
+
 equal.addEventListener('click', function(){
     let currentInput = parseFloat(input.textContent);
     currentArray.push(currentInput)
     multiOperate(currentArray);
     currentArray = [];
-
     }
 );
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        let currentInput = parseFloat(input.textContent);
+        currentArray.push(currentInput)
+        multiOperate(currentArray);
+        currentArray = [];
+    }
+});
+
 deleteBtn.addEventListener('click', function(){
     input.textContent = '';
     }
 );
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Backspace') {
+        input.textContent = '';
+    }
+});
+
 posNeg.addEventListener('click', function(){
     let currentInput = input.textContent;
     if (currentInput > 0) {
@@ -81,12 +129,6 @@ posNeg.addEventListener('click', function(){
 });
 
 
-let currentArray = [];
-let secondaryArray = [];
-let currentInput = '';
-let currentOperation = '';
-let newInput = '';
-let calculation = '';
 
 
 //event listeners for operators
@@ -104,6 +146,24 @@ addBtn.addEventListener('click', function(){
         input.textContent = '';
     }
 });
+document.addEventListener('keydown', function(event) {
+    if (event.key === '+') {
+        if (input.textContent != '') {
+            let currentInput = parseFloat(input.textContent);
+            currentArray.push(currentInput);
+            let currentOperation = "+";
+            currentArray.push(currentOperation);
+            input.textContent = '';
+        } else {
+            currentArray.pop();
+            let currentOperation = "+";
+            currentArray.push(currentOperation);
+            input.textContent = '';
+        }
+    }
+});
+
+
 subtractBtn.addEventListener('click', function(){
     if (input.textContent != '') {
         let currentInput = parseFloat(input.textContent);
@@ -118,6 +178,23 @@ subtractBtn.addEventListener('click', function(){
         input.textContent = '';
     }
 });
+document.addEventListener('keydown', function(event) {
+    if (event.key === '-') {
+        if (input.textContent != '') {
+            let currentInput = parseFloat(input.textContent);
+            currentArray.push(currentInput);
+            let currentOperation = "-";
+            currentArray.push(currentOperation);
+            input.textContent = '';
+        } else {
+            currentArray.pop();
+            let currentOperation = "-";
+            currentArray.push(currentOperation);
+            input.textContent = '';
+        }
+    }
+});
+
 multiplyBtn.addEventListener('click', function(){
     if (input.textContent != '') {
         let currentInput = parseFloat(input.textContent);
@@ -132,6 +209,23 @@ multiplyBtn.addEventListener('click', function(){
         input.textContent = '';
     }
 });
+document.addEventListener('keydown', function(event) {
+    if (event.key === '*') {
+        if (input.textContent != '') {
+            let currentInput = parseFloat(input.textContent);
+            currentArray.push(currentInput);
+            let currentOperation = "*";
+            currentArray.push(currentOperation);
+            input.textContent = '';
+        } else {
+            currentArray.pop();
+            let currentOperation = "*";
+            currentArray.push(currentOperation);
+            input.textContent = '';
+        }
+    }
+});
+
 divideBtn.addEventListener('click', function(){
     if (input.textContent != '') {
         let currentInput = parseFloat(input.textContent);
@@ -144,6 +238,22 @@ divideBtn.addEventListener('click', function(){
         let currentOperation = "/";
         currentArray.push(currentOperation);
         input.textContent = '';
+    }
+});
+document.addEventListener('keydown', function(event) {
+    if (event.key === '/') {
+        if (input.textContent != '') {
+            let currentInput = parseFloat(input.textContent);
+            currentArray.push(currentInput);
+            let currentOperation = "/";
+            currentArray.push(currentOperation);
+            input.textContent = '';
+        } else {
+            currentArray.pop();
+            let currentOperation = "/";
+            currentArray.push(currentOperation);
+            input.textContent = '';
+        }
     }
 });
 
@@ -160,6 +270,13 @@ function calculate(a, operator, b) {
             return a / b;
     }
 }
+
+let currentArray = [];
+let secondaryArray = [];
+let currentInput = '';
+let currentOperation = '';
+let newInput = '';
+let calculation = '';
 
 //operate function for calculating multiple operations
 function multiOperate(array) {
@@ -214,10 +331,8 @@ function multiOperate(array) {
 
     if (previousOperand === null) { //if simple calculation with no competing operators
         input.textContent = result;
-        //secondaryArray.push(result);
     } else { //if calculation involves competing operators
         secondaryArray.push(previousOperand); //append mult/div accumulator from above loop
-        console.log(secondaryArray);
 
         let result = secondaryArray[0];
         let currentOperator = null;
@@ -238,80 +353,36 @@ function multiOperate(array) {
             }
         }
         input.textContent = result;
-        
-        /*
-        for (let i = 1; i < secondaryArray.length; i++) {
-            const item = secondaryArray[i];
-            result = secondaryArray[0];
-            currentOperator = null;
-            currentOperand = null;
-
-            if (typeof item === 'number') {
-                if (currentOperator === null) {
-                    result = item;
-                } else {
-                    currentOperand = item;
-                    result = calculate(result, currentOperator, currentOperand);
-                }
-            } else if (typeof item === 'string') {
-                currentOperator = item;
-            }
-        }
-        input.textContent = result; */
     }
+
+    //if calculation exceeds >6 digits
+    let finalInput = parseFloat(input.textContent);
+    if (input.textContent.length > 6 && input.textContent.length < 8) {
+        input.style.fontSize = "80px";
+    } else if (input.textContent.length > 7 && input.textContent.length < 9) {
+        input.style.fontSize = "70px";
+    } else if (input.textContent.length > 8 && input.textContent.length < 10) {
+        input.style.fontSize = "60px";
+    } else if (input.textContent.length > 9) {
+        input.textContent = finalInput.toExponential(4);
+        input.style.fontSize = "60px";
+    } else {
+        input.style.fontSize = "90px";
+    }
+
+    //if calculation exceeds absurdly long lengths (>100)
+    let maxNumber = parseFloat(1e+100); //max positive number
+    let minNeg = parseFloat(-1e+100); //max negative number
+    let minDec = parseFloat(1e-100); //max length between 0 and 1
+    let minNegDec = parseFloat(-1e-100); //max length between 0 and -1
+    if (finalInput > maxNumber 
+        || finalInput < minNeg 
+        || finalInput < minDec && finalInput > 0 
+        || finalInput > minNegDec && finalInput < 0){
+        input.textContent = 'SRSLY?';
+    };
 }
 
-
-//maybe turn array into one string, and then calculate on single string?
-
-//operate function which can only calculate a single operation
-// function operate() {
-//     let newInput = parseFloat(input.textContent);
-//     currentArray.push(newInput);
-//     if (currentArray[1] === "+") {
-//         let calculation = add(currentArray[0],currentArray[2]);
-//         input.textContent = calculation;
-//     } else if (currentArray[1] === "-") {
-//         let calculation = subtract(currentArray[0],currentArray[2]);
-//         input.textContent = calculation;
-//     } else if (currentArray[1] === "*") {
-//         let calculation = multiply(currentArray[0],currentArray[2]);
-//         input.textContent = calculation;
-//     } else if (currentArray[1] === "/") {
-//         let calculation = divide(currentArray[0],currentArray[2]);
-//         input.textContent = calculation;
-//     } else {
-//         alert("haven't fixed that bug yet :-/")
-//     };
-//     currentArray =  [];
-
-//     //if calculation exceeds >6 digits
-//     let finalInput = parseFloat(input.textContent);
-//     if (input.textContent.length > 6 && input.textContent.length < 8) {
-//         input.style.fontSize = "80px";
-//     } else if (input.textContent.length > 7 && input.textContent.length < 9) {
-//         input.style.fontSize = "70px";
-//     } else if (input.textContent.length > 8 && input.textContent.length < 10) {
-//         input.style.fontSize = "60px";
-//     } else if (input.textContent.length > 9) {
-//         input.textContent = finalInput.toExponential(4);
-//         input.style.fontSize = "60px";
-//     } else {
-//         input.style.fontSize = "90px";
-//     }
-
-//     //if calculation exceeds absurdly long lengths (>100)
-//     let maxNumber = parseFloat(1e+100); //max positive number
-//     let minNeg = parseFloat(-1e+100); //max negative number
-//     let minDec = parseFloat(1e-100); //max length between 0 and 1
-//     let minNegDec = parseFloat(-1e-100); //max length between 0 and -1
-//     if (finalInput > maxNumber 
-//         || finalInput < minNeg 
-//         || finalInput < minDec && finalInput > 0 
-//         || finalInput > minNegDec && finalInput < 0){
-//         input.textContent = 'SRSLY?';
-//     }; 
-// }
 
 /*
 pseudocode
@@ -361,7 +432,7 @@ Misc:
  4. Limit number of characters in calculations - DONE
 
  CURRENT BUGS/TO-DO:
- - multiple decimal input
- - add character length limit to new multiOperate function
+ - multiple decimal input - DONE
+ - add character length limit to new multiOperate function - DONE
  - divide by zero error
 */

@@ -21,11 +21,7 @@ body {
     border-radius: 55px;
 }
 
-.calcHeader {
-    font-size: 20px;
-    background-color: transparent;
-    color: white;
-}
+
 
 .input {
     color: white;   
@@ -38,6 +34,7 @@ body {
     display: flex;
     align-items: flex-end;
     justify-content: flex-end;
+    margin-top: 30px;
 }
 
 button {
