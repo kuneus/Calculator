@@ -68,12 +68,14 @@ for (let i = 0; i <= 9; i++) {
 allClearbtn.addEventListener('click', function (){
     input.textContent = '';
     currentArray.length = 0;
+    secondaryArray.length = 0;
     }
 );
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
         input.textContent = '';
         currentArray.length = 0;
+        secondaryArray.length = 0;
     }
 });
 
@@ -96,6 +98,7 @@ equal.addEventListener('click', function(){
     currentArray.push(currentInput)
     multiOperate(currentArray);
     currentArray = [];
+    secondaryArray = [];
     }
 );
 document.addEventListener('keydown', function(event) {
@@ -104,6 +107,7 @@ document.addEventListener('keydown', function(event) {
         currentArray.push(currentInput)
         multiOperate(currentArray);
         currentArray = [];
+        secondaryArray = [];
     }
 });
 
@@ -257,7 +261,7 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
-
+//calculate function for calculating operations within multiOperate function
 function calculate(a, operator, b) {
     switch (operator) {
         case '+':
@@ -274,52 +278,64 @@ function calculate(a, operator, b) {
 let currentArray = [];
 let secondaryArray = [];
 let currentInput = '';
-let currentOperation = '';
-let newInput = '';
-let calculation = '';
 
-//operate function for calculating multiple operations
+/*
+operate function for calculating multiple operations
+In order to operate between mult/div and add/subtract and account for operation precedence (mult/div > add/sub),
+I created two arrays and looped through both. All numbers inputted in the calculator are initially pushed to the first array (currentArray).
+In the first loop, currentArray calculates all mult/div operations while pushing all add/sub operators and their involved operands to 
+the second array--arraySecondary. All products/quotients calculated from currentArray are pushed to arraySecondary.
+Then the second loop calculates all add/sub. The final result from the second loop is pushed to the input display. 
+*/
 function multiOperate(array) {
     let result = array[0];
     let currentOperator = null;
     let currentOperand = null;
     let secondaryOperator = null;
     let previousOperand = null;
-    let secondaryArray = [];
-    if (array[1] === '-' || array[1] === '+'){
-        if (array[3] === '*' || array[3] === '/') {
-        secondaryArray.push(array[0]);
-        } 
-    }
   
-    for (let i = 1; i < array.length; i++) {
+    for (let i = 0; i < array.length; i++) {
         const item = array[i];
         const nextItem = array[i+1];
 
         if (typeof item === 'number') {
             if (currentOperator === null) { //if no operator established, sets the first item as result
-                result = item; //result acts as the first operand
+                result = item; 
+                if (nextItem === '+' || nextItem === '-') { //if next operator is +/-, then append current item to 2nd array
+                    secondaryArray.push(item); 
+                    secondaryArray.push(nextItem);
+                    result = 0; 
+                }
             } else if (currentOperator === '*' || currentOperator === '/') { //if operator is multiply or divide, continue with calculate
                 currentOperand = item;
-                if (previousOperand === null) { //if previous operand isn't stored
+                if (previousOperand === null) { 
                     result = calculate(result, currentOperator, currentOperand); 
+                    if (nextItem === '+' || nextItem === '-') { //if next operator is +/-, then append current item to 2nd array
+                        secondaryArray.push(result); 
+                        secondaryArray.push(nextItem);
+                        result = 0; 
+                    }
                 } else { //if previous operand is stored, then start new accumulator with previous operand
                     previousOperand = calculate(previousOperand, currentOperator, currentOperand); 
-                    if (array[i+1] === '+' || array[i+1] === '-') {
-                        secondaryArray.push(previousOperand); //push new accumulation to secondary array
-                        previousOperand = 0; //reset accumulation to let it accumulate again
+                    if (nextItem === '+' || nextItem === '-') { //if next operator is +/-, then append current accumulation to 2nd array
+                        secondaryArray.push(previousOperand);
+                        previousOperand = 0;
+                        secondaryArray.push(nextItem);
+
                     }
                 }
             } else if (secondaryOperator === '+' || secondaryOperator === '-') {
                 if (nextItem === '*' || nextItem === '/') { //if current operator is add/subtract but following operator is mult/div
                     previousOperand = item;
-                    secondaryArray.push(secondaryOperator); //store lower precedence operators in second array
-                } else { //if current operator is add/subject and is not competing with mult/div for following operator
-                    currentOperand = item;
-                    result = calculate(result, secondaryOperator, currentOperand);
+                    secondaryArray.push(secondaryOperator);
+                    result = 0;
+                } else { //if current operator is add/subjtract and next operator is not mult/div 
+                    secondaryArray.push(item);
+                    secondaryArray.push(nextItem);
+                    result = 0;
                 }
             }
-        } else if (typeof item === 'string') { //if current item is a string, establish current item as current operator
+        } else if (typeof item === 'string') { //if current item is a string, establish current item as current operator for mult/div or 2nd operator for add/sub
             if (item === '*' || item === '/'){
                 currentOperator = item;
             } else {
@@ -328,32 +344,36 @@ function multiOperate(array) {
             }
         }
     }
+    secondaryArray.push(result); 
 
-    if (previousOperand === null) { //if simple calculation with no competing operators
-        input.textContent = result;
-    } else { //if calculation involves competing operators
-        secondaryArray.push(previousOperand); //append mult/div accumulator from above loop
+    console.log(currentArray);
+    console.log(secondaryArray);
 
-        let result = secondaryArray[0];
-        let currentOperator = null;
-        let currentOperand = null;
+    //second loop for calculating secondaryArray
+    if (previousOperand !== null) {
+        secondaryArray.push(previousOperand);
+    };
+
+    result = secondaryArray[0];
+    currentOperator = null;
+    currentOperand = null;
         
-        for (let i = 1; i < secondaryArray.length; i++) {
-            const item = secondaryArray[i];
-
-            if (typeof item === 'number') {
-                if (currentOperator === null) {
-                    result = item;
-                } else {
-                    currentOperand = item;
-                    result = calculate(result, currentOperator, currentOperand);
-                }
-            } else if (typeof item === 'string') {
-                currentOperator = item;
+    for (let i = 1; i < secondaryArray.length; i++) {
+        const item = secondaryArray[i];
+        if (typeof item === 'number') {
+            if (currentOperator === null) {
+                result = item;
+            } else {
+                currentOperand = item;
+                result = calculate(result, currentOperator, currentOperand);
             }
+        } else if (typeof item === 'string') {
+            currentOperator = item;
         }
-        input.textContent = result;
     }
+    input.textContent = result;
+
+
 
     //if calculation exceeds >6 digits
     let finalInput = parseFloat(input.textContent);
@@ -363,7 +383,7 @@ function multiOperate(array) {
         input.style.fontSize = "70px";
     } else if (input.textContent.length > 8 && input.textContent.length < 10) {
         input.style.fontSize = "60px";
-    } else if (input.textContent.length > 9) {
+    } else if (input.textContent.length > 9) { //if calculation exceeds 9 digits, turn it into scientific notation
         input.textContent = finalInput.toExponential(4);
         input.style.fontSize = "60px";
     } else {
@@ -373,8 +393,8 @@ function multiOperate(array) {
     //if calculation exceeds absurdly long lengths (>100)
     let maxNumber = parseFloat(1e+100); //max positive number
     let minNeg = parseFloat(-1e+100); //max negative number
-    let minDec = parseFloat(1e-100); //max length between 0 and 1
-    let minNegDec = parseFloat(-1e-100); //max length between 0 and -1
+    let minDec = parseFloat(1e-100); //max length for decimals between 0 and 1
+    let minNegDec = parseFloat(-1e-100); //max length for decimals between 0 and -1
     if (finalInput > maxNumber 
         || finalInput < minNeg 
         || finalInput < minDec && finalInput > 0 
@@ -386,27 +406,6 @@ function multiOperate(array) {
 
 /*
 pseudocode
-create button functionality
-    number click is displayed on input screen
-create math functions
-    add executes add function
-    subtract executes subtract function
-    multiply executes multiply function
-    divide executes divide function
-    equal executes equal function
-create other functions
-    allClear executes allClear function
-    delete executes delete function
-each operator function must store first set of numbers,
- clear the input, and store the operation
-operate function must apply the operator functions to
- the stored numbers 
- any time a button is clicked, it should highlight the button until a new 
-     button is clicked.
- once a new button is clicked, it should clear the current input and 
-     allow a new number to be input
-to store numbers, may need to store them in arrays and 
- use array methods such as map or reduce
  
 sequence is as follows:
  1. click numbers into input - DONE
@@ -435,4 +434,34 @@ Misc:
  - multiple decimal input - DONE
  - add character length limit to new multiOperate function - DONE
  - divide by zero error
+ - add keyboard presses for all number and misc keys - DONE
+ - does not perform all equations correctly. Need to fix multiOperate function - DONE
+ Must be able to perform following calculations correctly:
+
+ 12 + 7 - 5 * 3 = 4
+    PASSED - 
+12 + 7 - 5 - 4 * 3 = 2
+    PASSED - 
+ 10 - 2 * 5 + 20 / 5 * 3 - 6 * 3 = -6 
+    PASSED - 
+ 1 + 2 + 3 - 4 = 2
+    PASSED - 
+ 10 * 2 - 3 + 5 = 22 
+    PASSED
+10 - 2 * 5 = 0
+    PASSED - 
+10 - 2 * 5 + 3 = 3
+    PASSED - 
+10 - 2 * 5 + 3 + 6 = 9
+    PASSED - 
+10 - 2 * 5 + 3 * 2 = 6
+    PASSED -
+2 * 3 - 3 * 2 = 0;
+    PASSED - 
+
+
+
+ OPTIONAL TO-DO
+ - display entire calculation on input, including operators
+ - maintain highlight of operator until number button press
 */
