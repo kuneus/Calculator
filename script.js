@@ -1,4 +1,5 @@
 const input = document.getElementById('input');
+const inputTwo = document.getElementById('secondInput');
 const zero = document.getElementById('zero');
 const one = document.getElementById('one');
 const two = document.getElementById('two');
@@ -21,11 +22,23 @@ const equal = document.getElementById('equal');
 const posNeg = document.getElementById('posNeg');
 const allBtns = document.getElementsByClassName('numbers');
 
+let inputTwoArray = [];
+const joinedInput = inputTwoArray.join('');
+
 
 //function to update input with button click and limit length of numb
 const updateDisplay = (click) => {
     let valOutput = click.target.innerText;
+
+    if (inputTwoArray.includes(' =')){
+        inputTwoArray = [];
+        inputTwoArray.push(input.textContent);
+        inputTwo.textContent = inputTwoArray.join('');
+    };
+
     input.textContent += valOutput;
+    inputTwoArray.push(valOutput);
+    inputTwo.textContent = inputTwoArray.join('');
     if (input.textContent.length > 6 && input.textContent.length < 8) {
         input.style.fontSize = "80px";
     } else if (input.textContent.length > 7 && input.textContent.length < 9) {
@@ -34,6 +47,8 @@ const updateDisplay = (click) => {
         input.style.fontSize = "60px";
     } else if (input.textContent.length > 9) {
         input.textContent = input.textContent.slice(0,-1);
+        inputTwoArray.pop();
+        inputTwo.textContent = inputTwoArray.join('');
     } else {
         input.style.fontSize = "90px";
     }
@@ -47,26 +62,46 @@ for (let i = 0; i < allBtns.length; i++) {
 //loop to update input with number key clicked on keyboard and limit length of numb. **turns input into string**
 for (let i = 0; i <= 9; i++) {
     document.addEventListener('keydown', function(event) {
-      if (event.key === i.toString()) {
+        if (inputTwoArray.includes(' =')){
+            inputTwoArray = [];
+            inputTwoArray.push(input.textContent);
+            inputTwo.textContent = inputTwoArray.join('');
+        };
+      
+        if (event.key === i.toString()) {
         input.textContent += i;
+        inputTwoArray.push(i)
+        inputTwo.textContent = inputTwoArray.join('');
       }
+      
       if (input.textContent.length > 6 && input.textContent.length < 8) {
         input.style.fontSize = "80px";
     } else if (input.textContent.length > 7 && input.textContent.length < 9) {
         input.style.fontSize = "70px";
     } else if (input.textContent.length > 8 && input.textContent.length < 10) {
         input.style.fontSize = "60px";
-    } else if (input.textContent.length > 9) {
-        input.textContent = input.textContent.slice(0,-1);
+    } else if (input.textContent.length > 9 && !input.textContent.includes('e')) {
+            input.textContent = input.textContent.slice(0,-1); 
+            inputTwoArray.pop();
+            inputTwo.textContent = inputTwoArray.join('');  
+    } else if (input.textContent.includes('e')){ 
+            if (input.textContent.length > 10) {
+               input.textContent = input.textContent.slice(0,-1); 
+                inputTwoArray.pop();
+                inputTwo.textContent = inputTwoArray.join(''); 
+            }
     } else {
         input.style.fontSize = "90px";
     }
     });
   }
 
+
 //event listeners for misc buttons and keyboard presses
 allClearbtn.addEventListener('click', function (){
     input.textContent = '';
+    inputTwo.textContent = '';
+    inputTwoArray.length = 0;
     currentArray.length = 0;
     secondaryArray.length = 0;
     }
@@ -74,6 +109,8 @@ allClearbtn.addEventListener('click', function (){
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
         input.textContent = '';
+        inputTwo.textContent = '';
+        inputTwoArray.length = 0;
         currentArray.length = 0;
         secondaryArray.length = 0;
     }
@@ -81,7 +118,8 @@ document.addEventListener('keydown', function(event) {
 
 decimal.addEventListener('click', function(){
     if (!input.textContent.includes('.')) {
-    input.textContent += '.'
+    input.textContent += '.';
+    inputTwoArray.push('.');
     };
     }
 );
@@ -89,6 +127,7 @@ document.addEventListener('keydown', function(event) {
     if (!input.textContent.includes('.')) {
         if (event.key === '.') {
             input.textContent += '.';
+            inputTwoArray.push('.');
         }
     }
 });
@@ -99,6 +138,10 @@ equal.addEventListener('click', function(){
     multiOperate(currentArray);
     currentArray = [];
     secondaryArray = [];
+    if (!inputTwoArray.includes(' =')){
+        inputTwoArray.push(' =');
+        inputTwo.textContent = inputTwoArray.join('');
+    }; 
     }
 );
 document.addEventListener('keydown', function(event) {
@@ -108,93 +151,172 @@ document.addEventListener('keydown', function(event) {
         multiOperate(currentArray);
         currentArray = [];
         secondaryArray = [];
+        if (!inputTwoArray.includes(' =')){
+            inputTwoArray.push(' =');
+            inputTwo.textContent = inputTwoArray.join('');
+        };  
+
     }
 });
 
 deleteBtn.addEventListener('click', function(){
+    let deleteLength = input.textContent.length;
     input.textContent = '';
+    for (let i = 0; i < deleteLength; i++) {
+        inputTwoArray.pop();
+    } 
+    let joinedInput = inputTwoArray.join('');
+    inputTwo.textContent = joinedInput;   
     }
 );
 document.addEventListener('keydown', function(event) {
+    let deleteLength = input.textContent.length;
     if (event.key === 'Backspace') {
         input.textContent = '';
+        for (let i = 0; i < deleteLength; i++) {
+            inputTwoArray.pop();
+        } 
+        let joinedInput = inputTwoArray.join('');
+        inputTwo.textContent = joinedInput;   
     }
 });
 
 posNeg.addEventListener('click', function(){
     let currentInput = input.textContent;
+    let inputLength = input.textContent.length;
     if (currentInput > 0) {
-    input.textContent = '-' + currentInput;
+        input.textContent = '-' + currentInput;
+        inputTwoArray.splice(-inputLength, 0, "-");
+        inputTwo.textContent = inputTwoArray.join('');
     } else if (currentInput < 0) {
         input.textContent = currentInput * -1;
+        inputTwoArray.splice(-inputLength, 1);
+        inputTwo.textContent = inputTwoArray.join('');
     } else {
+        if (input.textContent === '-') {
+            input.textContent = '';
+            inputTwo.textContent = '';
+            inputTwoArray = [];
+        } else {
+        inputTwoArray.push('-');
+        inputTwo.textContent = inputTwoArray.join('');
         input.textContent = '-';
-    }
+        }
+    };
+
+    if (inputTwoArray.includes(' =')){
+        inputTwoArray = [];
+        inputTwoArray.push(input.textContent)
+        inputTwo.textContent = inputTwoArray.join('');
+    }; 
 });
 
 
-
+//event listeners for appending operators after calculation has been performed
+for (let i = 0; i < operations.length; i++) {
+    operations[i].addEventListener('click', function(){
+        console.log("test");
+        if (inputTwoArray.includes(' =')){
+            inputTwoArray = [];
+            inputTwoArray.push(input.textContent);
+            inputTwo.textContent = inputTwoArray.join('');
+        };
+    })
+};
 
 //event listeners for operators
 addBtn.addEventListener('click', function(){
+    
     if (input.textContent != '') {
         let currentInput = parseFloat(input.textContent);
         currentArray.push(currentInput);
         let currentOperation = "+";
         currentArray.push(currentOperation);
         input.textContent = '';
+        inputTwoArray.push(' + ');
+        inputTwo.textContent = inputTwoArray.join('');
     } else {
         currentArray.pop();
         let currentOperation = "+";
         currentArray.push(currentOperation);
         input.textContent = '';
+        inputTwoArray.pop();
+        inputTwoArray.push(' + ');
+        inputTwo.textContent = inputTwoArray.join('');
     }
 });
 document.addEventListener('keydown', function(event) {
     if (event.key === '+') {
+        if (inputTwoArray.includes(' =')){
+            inputTwoArray = [];
+            inputTwoArray.push(input.textContent);
+            inputTwo.textContent = inputTwoArray.join('');
+        };
+        
         if (input.textContent != '') {
             let currentInput = parseFloat(input.textContent);
             currentArray.push(currentInput);
             let currentOperation = "+";
             currentArray.push(currentOperation);
             input.textContent = '';
+            inputTwoArray.push(' + ');
+            inputTwo.textContent = inputTwoArray.join('');
         } else {
             currentArray.pop();
             let currentOperation = "+";
             currentArray.push(currentOperation);
             input.textContent = '';
-        }
+            inputTwoArray.pop();
+            inputTwoArray.push(' + ');
+            inputTwo.textContent = inputTwoArray.join('');
+        };   
     }
 });
 
 
-subtractBtn.addEventListener('click', function(){
+subtractBtn.addEventListener('click', function(){    
     if (input.textContent != '') {
         let currentInput = parseFloat(input.textContent);
         currentArray.push(currentInput);
         let currentOperation = "-";
         currentArray.push(currentOperation);
         input.textContent = '';
+        inputTwoArray.push(' - ');
+        inputTwo.textContent = inputTwoArray.join('');
     } else {
         currentArray.pop();
         let currentOperation = "-";
         currentArray.push(currentOperation);
         input.textContent = '';
+        inputTwoArray.pop();
+        inputTwoArray.push(' - ');
+        inputTwo.textContent = inputTwoArray.join('');
     }
 });
 document.addEventListener('keydown', function(event) {
     if (event.key === '-') {
+        if (inputTwoArray.includes(' =')){
+            inputTwoArray = [];
+            inputTwoArray.push(input.textContent);
+            inputTwo.textContent = inputTwoArray.join('');
+        };
+        
         if (input.textContent != '') {
             let currentInput = parseFloat(input.textContent);
             currentArray.push(currentInput);
             let currentOperation = "-";
             currentArray.push(currentOperation);
             input.textContent = '';
+            inputTwoArray.push(' - ');
+            inputTwo.textContent = inputTwoArray.join('');
         } else {
             currentArray.pop();
             let currentOperation = "-";
             currentArray.push(currentOperation);
             input.textContent = '';
+            inputTwoArray.pop();
+            inputTwoArray.push(' - ');
+            inputTwo.textContent = inputTwoArray.join('');
         }
     }
 });
@@ -206,11 +328,16 @@ multiplyBtn.addEventListener('click', function(){
         let currentOperation = "*";
         currentArray.push(currentOperation);
         input.textContent = '';
+        inputTwoArray.push(' * ');
+        inputTwo.textContent = inputTwoArray.join('');
     } else {
         currentArray.pop();
         let currentOperation = "*";
         currentArray.push(currentOperation);
         input.textContent = '';
+        inputTwoArray.pop();
+        inputTwoArray.push(' * ');
+        inputTwo.textContent = inputTwoArray.join('');
     }
 });
 document.addEventListener('keydown', function(event) {
@@ -221,11 +348,16 @@ document.addEventListener('keydown', function(event) {
             let currentOperation = "*";
             currentArray.push(currentOperation);
             input.textContent = '';
+            inputTwoArray.push(' * ');
+            inputTwo.textContent = inputTwoArray.join('');
         } else {
             currentArray.pop();
             let currentOperation = "*";
             currentArray.push(currentOperation);
             input.textContent = '';
+            inputTwoArray.pop();
+            inputTwoArray.push(' * ');
+            inputTwo.textContent = inputTwoArray.join('');
         }
     }
 });
@@ -237,11 +369,16 @@ divideBtn.addEventListener('click', function(){
         let currentOperation = "/";
         currentArray.push(currentOperation);
         input.textContent = '';
+        inputTwoArray.push(' / ');
+        inputTwo.textContent = inputTwoArray.join('');
     } else {
         currentArray.pop();
         let currentOperation = "/";
         currentArray.push(currentOperation);
         input.textContent = '';
+        inputTwoArray.pop();
+        inputTwoArray.push(' / ');
+        inputTwo.textContent = inputTwoArray.join('');
     }
 });
 document.addEventListener('keydown', function(event) {
@@ -252,11 +389,16 @@ document.addEventListener('keydown', function(event) {
             let currentOperation = "/";
             currentArray.push(currentOperation);
             input.textContent = '';
+            inputTwoArray.push(' / ');
+            inputTwo.textContent = inputTwoArray.join('');
         } else {
             currentArray.pop();
             let currentOperation = "/";
             currentArray.push(currentOperation);
             input.textContent = '';
+            inputTwoArray.pop();
+            inputTwoArray.push(' / ');
+            inputTwo.textContent = inputTwoArray.join('');
         }
     }
 });
@@ -346,11 +488,8 @@ function multiOperate(array) {
     }
     secondaryArray.push(result); 
 
-    console.log(currentArray);
-    console.log(secondaryArray);
-
     //second loop for calculating secondaryArray
-    if (previousOperand !== null) {
+    if (previousOperand !== null) { //if any remaining accumulation from above loop, append to 2nd array
         secondaryArray.push(previousOperand);
     };
 
@@ -372,8 +511,6 @@ function multiOperate(array) {
         }
     }
     input.textContent = result;
-
-
 
     //if calculation exceeds >6 digits
     let finalInput = parseFloat(input.textContent);
@@ -405,8 +542,7 @@ function multiOperate(array) {
 
 
 /*
-pseudocode
- 
+NOTES
 sequence is as follows:
  1. click numbers into input - DONE
  2. click an operator - DONE
@@ -462,6 +598,7 @@ Misc:
 
 
  OPTIONAL TO-DO
- - display entire calculation on input, including operators
- - maintain highlight of operator until number button press
+ - display entire calculation on input, including operators - DONE
+    - update 2nd input display so that the div becomes scrollable instead of expanding the size of the div - DONE
+    - when using calculated outcome for next calculation, reset 2nd input display and use calculated outcome as new line - DONE
 */

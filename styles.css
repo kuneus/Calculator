@@ -17,11 +17,21 @@ body {
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    margin-top: 100px;
+    margin-top: 20px;
     border-radius: 55px;
+
 }
 
-
+.secondInput {
+    color: white;
+    width: 330px;
+    height: 300px;
+    margin-top: 40px;
+    font-family: Helvetica neue;
+    overflow: auto;
+    background-color: rgb(23, 23, 23);
+    padding: 5px;
+}
 
 .input {
     color: white;   
@@ -35,6 +45,7 @@ body {
     align-items: flex-end;
     justify-content: flex-end;
     margin-top: 30px;
+    
 }
 
 button {
@@ -93,6 +104,6 @@ button {
 .footer {
     font-size: 25px;
     bottom: 15px;
-    position: absolute;
+    position: fixed;
     left: 15px;
 }
