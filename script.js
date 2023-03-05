@@ -441,25 +441,25 @@ function multiOperate(array) {
         const nextItem = array[i+1];
 
         if (typeof item === 'number') {
-            if (currentOperator === null) { //if no operator established, sets the first item as result
+            if (currentOperator === null) { 
                 result = item; 
-                if (nextItem === '+' || nextItem === '-') { //if next operator is +/-, then append current item to 2nd array
+                if (nextItem === '+' || nextItem === '-') { 
                     secondaryArray.push(item); 
                     secondaryArray.push(nextItem);
                     result = 0; 
                 }
-            } else if (currentOperator === '*' || currentOperator === '/') { //if operator is multiply or divide, continue with calculate
+            } else if (currentOperator === '*' || currentOperator === '/') { 
                 currentOperand = item;
                 if (previousOperand === null) { 
                     result = calculate(result, currentOperator, currentOperand); 
-                    if (nextItem === '+' || nextItem === '-') { //if next operator is +/-, then append current item to 2nd array
+                    if (nextItem === '+' || nextItem === '-') { 
                         secondaryArray.push(result); 
                         secondaryArray.push(nextItem);
                         result = 0; 
                     }
-                } else { //if previous operand is stored, then start new accumulator with previous operand
+                } else { 
                     previousOperand = calculate(previousOperand, currentOperator, currentOperand); 
-                    if (nextItem === '+' || nextItem === '-') { //if next operator is +/-, then append current accumulation to 2nd array
+                    if (nextItem === '+' || nextItem === '-') { 
                         secondaryArray.push(previousOperand);
                         previousOperand = 0;
                         secondaryArray.push(nextItem);
@@ -467,17 +467,17 @@ function multiOperate(array) {
                     }
                 }
             } else if (secondaryOperator === '+' || secondaryOperator === '-') {
-                if (nextItem === '*' || nextItem === '/') { //if current operator is add/subtract but following operator is mult/div
+                if (nextItem === '*' || nextItem === '/') { 
                     previousOperand = item;
                     secondaryArray.push(secondaryOperator);
                     result = 0;
-                } else { //if current operator is add/subjtract and next operator is not mult/div 
+                } else { 
                     secondaryArray.push(item);
                     secondaryArray.push(nextItem);
                     result = 0;
                 }
             }
-        } else if (typeof item === 'string') { //if current item is a string, establish current item as current operator for mult/div or 2nd operator for add/sub
+        } else if (typeof item === 'string') { 
             if (item === '*' || item === '/'){
                 currentOperator = item;
             } else {
@@ -520,7 +520,7 @@ function multiOperate(array) {
         input.style.fontSize = "70px";
     } else if (input.textContent.length > 8 && input.textContent.length < 10) {
         input.style.fontSize = "60px";
-    } else if (input.textContent.length > 9) { //if calculation exceeds 9 digits, turn it into scientific notation
+    } else if (input.textContent.length > 9) { 
         input.textContent = finalInput.toExponential(4);
         input.style.fontSize = "60px";
     } else {
@@ -528,10 +528,10 @@ function multiOperate(array) {
     }
 
     //if calculation exceeds absurdly long lengths (>100)
-    let maxNumber = parseFloat(1e+100); //max positive number
-    let minNeg = parseFloat(-1e+100); //max negative number
-    let minDec = parseFloat(1e-100); //max length for decimals between 0 and 1
-    let minNegDec = parseFloat(-1e-100); //max length for decimals between 0 and -1
+    let maxNumber = parseFloat(1e+100); 
+    let minNeg = parseFloat(-1e+100); 
+    let minDec = parseFloat(1e-100); 
+    let minNegDec = parseFloat(-1e-100); 
     if (finalInput > maxNumber 
         || finalInput < minNeg 
         || finalInput < minDec && finalInput > 0 
@@ -539,66 +539,3 @@ function multiOperate(array) {
         input.textContent = 'SRSLY?';
     };
 }
-
-
-/*
-NOTES
-sequence is as follows:
- 1. click numbers into input - DONE
- 2. click an operator - DONE
- 3. store current input and store the operator - DONE
- 4. clear current input and add new input with the next button press - DONE
- 5. repeat steps 2-4 for operations that involve >2 sets of numbers - DONE
- 6. store all inputs and operations into an array - DONE
- 7. when equal is clicked, all inputs in the array and their operations are 
-     calculated into a final value - DONE
-     7a. calculations must follow order of operations - DONE
-     7b. must define conditionals within a function for the order of operations - DONE
- 8. final value is returned in the input.  - DONE
- 9. Allow new operations to operate on final value for continuity - DONE
-10. allClear removes current input and resets array storage - DONE
-11. clear function clears current input but does not reset array storage - DONE
-
-Misc:
- 1. Add rule that decimal point can only be used once - DONE
- 2. Add rule that numbers cannot exceed 6 figures, OR
-     decrease font size with additional figures beyond 6, with max input of 9 figures - DONE
- 3. +/- button turns current input into a positive or negative - DONE
- 4. Limit number of characters in calculations - DONE
-
- CURRENT BUGS/TO-DO:
- - multiple decimal input - DONE
- - add character length limit to new multiOperate function - DONE
- - divide by zero error
- - add keyboard presses for all number and misc keys - DONE
- - does not perform all equations correctly. Need to fix multiOperate function - DONE
- Must be able to perform following calculations correctly:
-
- 12 + 7 - 5 * 3 = 4
-    PASSED - 
-12 + 7 - 5 - 4 * 3 = 2
-    PASSED - 
- 10 - 2 * 5 + 20 / 5 * 3 - 6 * 3 = -6 
-    PASSED - 
- 1 + 2 + 3 - 4 = 2
-    PASSED - 
- 10 * 2 - 3 + 5 = 22 
-    PASSED
-10 - 2 * 5 = 0
-    PASSED - 
-10 - 2 * 5 + 3 = 3
-    PASSED - 
-10 - 2 * 5 + 3 + 6 = 9
-    PASSED - 
-10 - 2 * 5 + 3 * 2 = 6
-    PASSED -
-2 * 3 - 3 * 2 = 0;
-    PASSED - 
-
-
-
- OPTIONAL TO-DO
- - display entire calculation on input, including operators - DONE
-    - update 2nd input display so that the div becomes scrollable instead of expanding the size of the div - DONE
-    - when using calculated outcome for next calculation, reset 2nd input display and use calculated outcome as new line - DONE
-*/
